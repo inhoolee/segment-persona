@@ -467,3 +467,30 @@
   - CHANGELOG.md
 - Verification:
   - `npm run test -- tests/wizard.test.tsx` 통과
+
+## 2026-02-24 21:27
+- Request: 신뢰·차분형 전체 리테마 계획(배경/히어로/패널/진행 상태/버튼/포커스 색상 통일) 구현
+- Changes:
+  - 전역 색상 토큰을 신뢰·차분형 팔레트로 교체(`--bg-*`, `--panel`, `--ink*`, `--accent*`, `--line`)
+  - 페이지 배경 라디얼/그라디언트와 히어로 배경을 새 팔레트로 변경
+  - 배지, 진행 상태 active, 버튼(CTA), 완료 게이지를 `--accent` 계열로 통일
+  - 패널/카드/입력/태그/임팩트 박스의 경계선·배경 대비를 재조정해 전체 톤 일관성 확보
+  - 입력 포커스 링을 중채도 블루(`--focus-ring`)로 교체해 접근성 대비 개선
+- Files:
+  - app/globals.css
+  - CHANGELOG.md
+- Verification:
+  - `npm run lint` 통과
+  - `npm run test` 통과
+
+## 2026-02-24 21:28
+- Request: hero 영역의 "SEGMENT PERSONA LAB" 배지 텍스트가 흐릿하게 보이는 문제 수정
+- Changes:
+  - `.hero p` 일반 문단 스타일이 `.badge` 텍스트 색을 덮어쓰지 않도록 선택자를 `.hero > p:not(.badge)`로 변경
+  - 배지 가독성 향상을 위해 배지 배경 그라디언트를 더 진한 블루 톤으로 조정
+  - 배지 텍스트 색/미세 텍스트 섀도우를 적용해 명도 대비를 강화
+- Files:
+  - app/globals.css
+  - CHANGELOG.md
+- Verification:
+  - `npm run lint` 통과

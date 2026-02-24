@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #f4f0e6;
-  --bg-secondary: #fffaf1;
-  --panel: #fffef9;
-  --ink: #1f2937;
-  --ink-subtle: #556170;
-  --accent: #d95f02;
-  --accent-soft: #f6b26b;
-  --line: #e6dcc8;
+  --bg-primary: #eef4f7;
+  --bg-secondary: #f8f5ee;
+  --panel: #fcfdfb;
+  --ink: #1e2a33;
+  --ink-subtle: #5b6a75;
+  --accent: #2f6e8e;
+  --accent-soft: #7fb2c9;
+  --line: #d6dee4;
+  --focus-ring: #5f8faa;
+  --bg-radial-warm: #f6d9b1;
+  --bg-radial-cool: #ddeff2;
 }
 
 * {
@@ -21,8 +24,8 @@ body {
   color: var(--ink);
   font-family: var(--font-body), sans-serif;
   background:
-    radial-gradient(circle at 0% 0%, #ffd6a5 0, transparent 42%),
-    radial-gradient(circle at 100% 20%, #b8d8d8 0, transparent 40%),
+    radial-gradient(circle at 0% 0%, var(--bg-radial-warm) 0, transparent 42%),
+    radial-gradient(circle at 100% 20%, var(--bg-radial-cool) 0, transparent 40%),
     linear-gradient(180deg, var(--bg-secondary), var(--bg-primary));
 }
 
@@ -54,7 +57,7 @@ p {
   border: 1px solid var(--line);
   border-radius: 22px;
   padding: 26px;
-  background: linear-gradient(130deg, #fff 0%, #fff5dd 48%, #e3f6f5 100%);
+  background: linear-gradient(130deg, #fffefb 0%, #f7f6f1 48%, #edf4f8 100%);
   box-shadow: 0 16px 50px rgba(20, 20, 20, 0.08);
 }
 
@@ -67,8 +70,9 @@ p {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: white;
-  background: linear-gradient(90deg, #c84d00, #e7902e);
+  color: #f7fcff;
+  background: linear-gradient(90deg, #245f7c, #3f86a8);
+  text-shadow: 0 1px 0 rgba(16, 37, 49, 0.35);
 }
 
 .hero h1 {
@@ -76,7 +80,7 @@ p {
   line-height: 1.1;
 }
 
-.hero p {
+.hero > p:not(.badge) {
   margin-top: 12px;
   color: var(--ink-subtle);
 }
@@ -95,14 +99,14 @@ p {
   padding: 10px;
   text-align: center;
   color: var(--ink-subtle);
-  background: #fff8ec;
+  background: #f8fbfc;
   transition: all 160ms ease;
 }
 
 .progress-node.active {
   color: #fff;
   border-color: transparent;
-  background: linear-gradient(90deg, #bf4a00, #de7c2c);
+  background: linear-gradient(90deg, var(--accent), var(--accent-soft));
 }
 
 .progress-node span {
@@ -115,7 +119,7 @@ p {
   border: 1px solid var(--line);
   background: var(--panel);
   padding: 22px;
-  box-shadow: 0 10px 26px rgba(31, 41, 55, 0.07);
+  box-shadow: 0 10px 26px rgba(30, 42, 51, 0.07);
 }
 
 .panel h2 {
@@ -133,22 +137,22 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #dacbb0;
+  border: 1px solid #c8d5de;
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 13px;
   font-weight: 700;
-  color: #5c4b3a;
-  background: #fff8ea;
+  color: #415463;
+  background: #f4f9fc;
   cursor: pointer;
 }
 
 .collapse-toggle:hover {
-  border-color: #c87e2e;
+  border-color: var(--accent);
 }
 
 .collapse-toggle:focus-visible {
-  outline: 2px solid #f4be73;
+  outline: 2px solid var(--focus-ring);
   outline-offset: 1px;
 }
 
@@ -214,7 +218,7 @@ p {
   border-radius: 14px;
   border: 1px solid var(--line);
   padding: 12px;
-  background: white;
+  background: #fdfefe;
 }
 
 .choice-card input,
@@ -231,16 +235,16 @@ p {
 
 .input-control {
   width: 100%;
-  border: 1px solid #d8cdb5;
+  border: 1px solid var(--line);
   border-radius: 12px;
   padding: 10px 12px;
   font-size: 15px;
-  background: #fffefa;
+  background: #fcfdfb;
 }
 
 .input-control:focus {
-  outline: 2px solid #f4be73;
-  border-color: #f4be73;
+  outline: 2px solid var(--focus-ring);
+  border-color: var(--focus-ring);
 }
 
 .chip-list {
@@ -262,7 +266,7 @@ p {
   align-items: stretch;
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: linear-gradient(160deg, #fffdf8, #fff6e8);
+  background: linear-gradient(160deg, #fcfdfb, #f2f7fa);
   padding: 16px;
 }
 
@@ -273,7 +277,7 @@ p {
   aspect-ratio: 1 / 1;
   border-radius: var(--persona-image-radius);
   overflow: hidden;
-  border: 1px solid #f0dfc0;
+  border: 1px solid #d4dee6;
 }
 
 .persona-image-wrap img {
@@ -321,9 +325,9 @@ p {
   max-width: 100%;
   min-width: 0;
   border-radius: 999px;
-  border: 1px solid #dcc8a5;
-  background: #fffaf1;
-  color: #654d2a;
+  border: 1px solid #c5d4df;
+  background: #f2f7fb;
+  color: #3c5364;
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 600;
@@ -343,21 +347,21 @@ p {
   font-size: 12px;
   font-weight: 700;
   color: #fff;
-  background: rgba(72, 34, 0, 0.78);
+  background: rgba(38, 70, 91, 0.78);
 }
 
 .completion-meter {
   overflow: hidden;
   height: 8px;
   border-radius: 999px;
-  background: #efdfc4;
+  background: #dce5eb;
 }
 
 .completion-meter span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #c64800 0%, #f1a43d 100%);
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 100%);
   transition: width 220ms ease;
 }
 
@@ -368,7 +372,7 @@ p {
 }
 
 .approach-card {
-  border: 1px solid #d8c9af;
+  border: 1px solid var(--line);
   border-radius: 14px;
   padding: 14px;
   text-align: left;
@@ -379,24 +383,24 @@ p {
 
 .approach-card:hover {
   transform: translateY(-1px);
-  border-color: #d06f18;
+  border-color: var(--accent-soft);
 }
 
 .approach-card.active {
-  border-color: #c55400;
-  background: #fff4de;
+  border-color: var(--accent);
+  background: #edf4f9;
 }
 
 .priority {
   font-size: 13px;
-  color: #b04700;
+  color: var(--accent);
   font-weight: 700;
 }
 
 .detail-card {
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fffdf8;
+  background: #f9fcff;
   padding: 16px;
 }
 
@@ -415,8 +419,8 @@ p {
 .impact-panel {
   margin-top: 12px;
   border-radius: 12px;
-  border: 1px solid #e6d5ba;
-  background: #fff2d5;
+  border: 1px solid #c7d8e4;
+  background: #ebf3f9;
   padding: 12px;
 }
 
@@ -443,13 +447,13 @@ p {
 
 .btn.solid {
   color: white;
-  background: linear-gradient(120deg, #bc4200, #e08a24);
+  background: linear-gradient(120deg, var(--accent), var(--accent-soft));
 }
 
 .btn.ghost {
-  border: 1px solid #d3c2a4;
-  color: #55473a;
-  background: #fff;
+  border: 1px solid var(--line);
+  color: #3f5261;
+  background: var(--panel);
 }
 
 @keyframes fadeUp {
