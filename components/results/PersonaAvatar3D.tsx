@@ -6,7 +6,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Box3, Color, Vector3 } from "three";
 import type { Group, Mesh, MeshStandardMaterial, Object3D } from "three";
-import type { PersonaAvatar3DConfig } from "@/lib/types/segment";
+import type { AgeGroup, PersonaAvatar3DConfig } from "@/lib/types/segment";
 
 interface PersonaAvatar3DProps {
   config: PersonaAvatar3DConfig;
@@ -47,6 +47,14 @@ class ModelErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryStat
     if (this.state.hasError) return null;
     return this.props.children;
   }
+}
+
+function getAgeModifiers(agePreset: AgeGroup): { heightScale: number; widthScale: number; animSpeed: number } {
+  if (agePreset === "10s") return { heightScale: 0.91, widthScale: 0.93, animSpeed: 1.25 };
+  if (agePreset === "30s") return { heightScale: 1.00, widthScale: 1.03, animSpeed: 0.90 };
+  if (agePreset === "40s") return { heightScale: 0.99, widthScale: 1.07, animSpeed: 0.80 };
+  if (agePreset === "50plus") return { heightScale: 0.96, widthScale: 1.10, animSpeed: 0.65 };
+  return { heightScale: 1.00, widthScale: 1.00, animSpeed: 1.00 };
 }
 
 function getCameraPosition(cameraPreset: PersonaAvatar3DConfig["cameraPreset"]): [number, number, number] {
@@ -143,33 +151,37 @@ function AvatarModel({ config }: { config: PersonaAvatar3DConfig }) {
     return clone;
   }, [scene, config.materialPreset, config.outfitPreset, config.cameraPreset]);
 
+  const { heightScale, widthScale, animSpeed } = getAgeModifiers(config.agePreset);
+
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
     const t = clock.getElapsedTime();
     const baseY = config.cameraPreset === "close" ? -0.06 : -0.02;
 
     if (config.animation === "new") {
-      groupRef.current.rotation.y = Math.sin(t * 1.2) * 0.12;
-      groupRef.current.position.y = baseY + Math.sin(t * 1.1) * 0.05;
+      groupRef.current.rotation.y = Math.sin(t * 1.2 * animSpeed) * 0.12;
+      groupRef.current.position.y = baseY + Math.sin(t * 1.1 * animSpeed) * 0.05;
       return;
     }
     if (config.animation === "occasional") {
-      groupRef.current.rotation.y = Math.sin(t * 0.9) * 0.08;
-      groupRef.current.position.y = baseY + Math.sin(t * 0.7) * 0.03;
+      groupRef.current.rotation.y = Math.sin(t * 0.9 * animSpeed) * 0.08;
+      groupRef.current.position.y = baseY + Math.sin(t * 0.7 * animSpeed) * 0.03;
       return;
     }
     if (config.animation === "regular") {
-      groupRef.current.rotation.y = Math.sin(t * 0.6) * 0.05;
-      groupRef.current.position.y = baseY + Math.sin(t * 0.9) * 0.02;
+      groupRef.current.rotation.y = Math.sin(t * 0.6 * animSpeed) * 0.05;
+      groupRef.current.position.y = baseY + Math.sin(t * 0.9 * animSpeed) * 0.02;
       return;
     }
-    groupRef.current.rotation.y = Math.sin(t * 0.4) * 0.03;
-    groupRef.current.position.y = baseY + Math.sin(t * 0.8) * 0.015;
+    groupRef.current.rotation.y = Math.sin(t * 0.4 * animSpeed) * 0.03;
+    groupRef.current.position.y = baseY + Math.sin(t * 0.8 * animSpeed) * 0.015;
   });
 
   return (
     <group ref={groupRef}>
-      <primitive object={clonedScene} />
+      <group scale={[widthScale, heightScale, widthScale]}>
+        <primitive object={clonedScene} />
+      </group>
     </group>
   );
 }

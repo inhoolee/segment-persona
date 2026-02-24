@@ -82,4 +82,19 @@ describe("SegmentPersonaWizard", () => {
     expect(screen.getByTestId("persona-media")).toHaveAttribute("data-render-mode", "image");
     expect(screen.getByRole("img", { name: /페르소나/ })).toBeInTheDocument();
   });
+
+  it("'선택하세요'를 다시 선택해도 세그먼트 기본값으로 안전하게 계산한다", async () => {
+    const user = userEvent.setup();
+    render(<SegmentPersonaWizard />);
+
+    await user.selectOptions(screen.getByLabelText("도메인"), "SaaS");
+    expect(screen.getByText(/입력 완성도 100%/)).toBeInTheDocument();
+
+    await user.selectOptions(screen.getByLabelText("연령대"), "");
+
+    expect(screen.getByText(/입력 완성도 80%/)).toBeInTheDocument();
+    expect(screen.getByText("SaaS 20대 여성 그룹")).toBeInTheDocument();
+    expect(screen.getByText("추천 접근법")).toBeInTheDocument();
+    expect(screen.getByText("예상 임팩트")).toBeInTheDocument();
+  });
 });

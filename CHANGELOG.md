@@ -455,3 +455,15 @@
 - Verification:
   - `npm run test` 통과
   - `npm run build` 통과
+
+## 2026-02-24 21:23
+- Request: 고객 세그먼트 입력에서 "선택하세요"를 눌렀을 때 발생하는 에러 수정
+- Changes:
+  - `toAnalysisInput`의 세그먼트 4필드(`ageGroup`, `gender`, `visitFrequency`, `paymentTier`) 변환 로직을 강화해 빈 문자열/허용되지 않은 값 입력 시 기본 샘플값으로 안전 복구하도록 수정
+  - 고객 세그먼트에서 `"선택하세요"`를 다시 선택해도 결과 렌더링이 유지되고 완성도 퍼센트가 감소하는 회귀 테스트를 추가
+- Files:
+  - components/SegmentPersonaWizard.tsx
+  - tests/wizard.test.tsx
+  - CHANGELOG.md
+- Verification:
+  - `npm run test -- tests/wizard.test.tsx` 통과

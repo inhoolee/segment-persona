@@ -4,7 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { analyzeSegment, recalculateApproachImpact } from "@/lib/analyzer/analyzeSegment";
-import type { ExpectedImpact, SegmentInput } from "@/lib/types/segment";
+import {
+  AGE_GROUPS,
+  GENDERS,
+  PAYMENT_TIERS,
+  VISIT_FREQUENCIES,
+  type ExpectedImpact,
+  type SegmentInput,
+} from "@/lib/types/segment";
 import { segmentSchema, type SegmentFormInput } from "@/lib/validation/segmentSchema";
 import { ResultsStep } from "@/components/results/ResultsStep";
 import { ContextStep } from "@/components/steps/ContextStep";
@@ -19,13 +26,22 @@ const REQUIRED_FIELDS: Array<keyof SegmentFormInput> = [
   "paymentTier",
 ];
 
+function resolveEnumValue<T extends string>(
+  value: unknown,
+  allowedValues: readonly T[],
+  fallback: T,
+): T {
+  if (typeof value !== "string") return fallback;
+  return (allowedValues as readonly string[]).includes(value) ? (value as T) : fallback;
+}
+
 function toAnalysisInput(input: Partial<SegmentFormInput>): SegmentInput {
   return {
     domain: input.domain?.trim() ? input.domain : "SaaS",
-    ageGroup: input.ageGroup ?? "20s",
-    gender: input.gender ?? "female",
-    visitFrequency: input.visitFrequency ?? "new",
-    paymentTier: input.paymentTier ?? "low",
+    ageGroup: resolveEnumValue(input.ageGroup, AGE_GROUPS, "20s"),
+    gender: resolveEnumValue(input.gender, GENDERS, "female"),
+    visitFrequency: resolveEnumValue(input.visitFrequency, VISIT_FREQUENCIES, "new"),
+    paymentTier: resolveEnumValue(input.paymentTier, PAYMENT_TIERS, "low"),
     goal: input.goal?.trim() ? input.goal : "conversion",
     channelPreference: input.channelPreference ?? "email",
     note: input.note ?? "",

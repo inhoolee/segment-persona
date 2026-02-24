@@ -46,5 +46,6 @@ export function buildPersonaAvatar3DConfig(input: SegmentInput): PersonaAvatar3D
     materialPreset: input.paymentTier,
     cameraPreset: input.ageGroup === "10s" || input.ageGroup === "20s" ? "close" : "medium",
     autoRotate: true,
+    agePreset: input.ageGroup,
   };
 }

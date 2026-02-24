@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(md5:*)",
+      "Bash(chmod +x:*)",
+      "WebSearch",
+      "WebFetch(domain:poly.pizza)",
+      "WebFetch(domain:quaternius.com)",
+      "Bash(head:*)",
+      "Bash(bash:*)"
+    ]
+  }
+}

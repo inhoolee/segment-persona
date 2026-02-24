@@ -37,6 +37,7 @@ export interface PersonaAvatar3DConfig {
   materialPreset: PaymentTier;
   cameraPreset: "close" | "medium";
   autoRotate: boolean;
+  agePreset: AgeGroup;
 }
 
 export interface ExpectedImpact {
