@@ -103,10 +103,10 @@ export function SegmentPersonaWizard() {
     <div className="wizard-shell">
       <header className="hero">
         <p className="badge">Segment Persona Lab</p>
-        <h1>고객 세그먼트 페르소나 분석 가이드</h1>
+        <h1>고객 세그먼트, 쉽게 이해하기</h1>
         <p>
-          데이터 분석 초보자를 위해 고객 정보를 입력하는 즉시 페르소나와 추천 접근법, 예상
-          임팩트를 갱신합니다.
+          분석 경험이 없어도 괜찮습니다. 고객 정보를 입력하는 즉시 페르소나와 마케팅 접근법을
+          제안합니다.
         </p>
       </header>
 

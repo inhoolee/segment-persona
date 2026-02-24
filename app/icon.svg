@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#1e2a33"/>
+  <!-- Segment arc 1 (top → bottom-right) -->
+  <path d="M16 5 A11 11 0 0 1 25.53 21.5" stroke="#7fb2c9" stroke-width="4.5" fill="none" stroke-linecap="butt"/>
+  <!-- Segment arc 2 (bottom-right → bottom-left) -->
+  <path d="M25.53 21.5 A11 11 0 0 1 6.47 21.5" stroke="#2f6e8e" stroke-width="4.5" fill="none" stroke-linecap="butt"/>
+  <!-- Segment arc 3 (bottom-left → top) -->
+  <path d="M6.47 21.5 A11 11 0 0 1 16 5" stroke="#f0d5a0" stroke-width="4.5" fill="none" stroke-linecap="butt"/>
+  <!-- Center dot (persona focal point) -->
+  <circle cx="16" cy="16" r="2.5" fill="white"/>
+</svg>

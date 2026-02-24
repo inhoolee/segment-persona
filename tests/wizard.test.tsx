@@ -1,19 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, vi } from "vitest";
 import { SegmentPersonaWizard } from "@/components/SegmentPersonaWizard";
-import { shouldRender3DAvatar } from "@/lib/utils/avatarRenderPolicy";
-
-vi.mock("@/lib/utils/avatarRenderPolicy", () => ({
-  shouldRender3DAvatar: vi.fn(() => false),
-}));
-
-vi.mock("@/components/results/PersonaAvatar3D", () => ({
-  PersonaAvatar3D: ({ config }: { config: { modelPath: string } }) => (
-    <div data-testid="persona-3d-viewer" data-model-path={config.modelPath} />
-  ),
-}));
 
 function hasExactParagraphText(expected: string) {
   return (_: string, element: Element | null) =>
@@ -21,14 +9,8 @@ function hasExactParagraphText(expected: string) {
 }
 
 describe("SegmentPersonaWizard", () => {
-  beforeEach(() => {
-    vi.mocked(shouldRender3DAvatar).mockReset();
-    vi.mocked(shouldRender3DAvatar).mockReturnValue(false);
-  });
-
   it("단일 화면에서 입력하면 실시간으로 결과를 갱신한다", async () => {
     const user = userEvent.setup();
-    vi.mocked(shouldRender3DAvatar).mockReturnValue(true);
     render(<SegmentPersonaWizard />);
 
     expect(screen.queryByRole("button", { name: "다음" })).not.toBeInTheDocument();
@@ -48,8 +30,8 @@ describe("SegmentPersonaWizard", () => {
     await user.selectOptions(screen.getByLabelText("접속 주기"), "loyal");
 
     expect(screen.getByText("SaaS 20대 여성 그룹")).toBeInTheDocument();
-    expect(await screen.findByTestId("persona-3d-viewer")).toBeInTheDocument();
-    expect(screen.getByTestId("persona-media")).toHaveAttribute("data-render-mode", "3d");
+    expect(screen.getByTestId("persona-media")).toHaveAttribute("data-render-mode", "image");
+    expect(screen.getByRole("img", { name: /페르소나/ })).toBeInTheDocument();
   });
 
   it("미입력 시 기본 샘플값으로 계산하고 추가 입력 변경 시 임팩트를 갱신한다", async () => {

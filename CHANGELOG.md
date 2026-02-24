@@ -494,3 +494,19 @@
   - CHANGELOG.md
 - Verification:
   - `npm run lint` 통과
+
+## 2026-02-24 21:33
+- Request: 3D 포즈 문제를 피하기 위해 결과 아바타를 2D로 고정하고, 연령대/도메인 특징이 더 잘 드러나는 SVG 아바타로 고도화
+- Changes:
+  - 결과 화면에서 3D 렌더 경로를 제거하고 `data-render-mode`를 항상 `image`로 고정
+  - 페르소나 SVG 생성 규칙에 연령 배지(우상단), 연령별 디테일(10대~50+), 도메인별 배경 모티프/아이콘(기본 7개 + custom fallback) 추가
+  - 위 정책에 맞춰 위저드 테스트를 2D 고정 검증으로 수정하고, SVG 내부 토큰(연령 배지/도메인 모티프/커스텀 fallback) 검증 단위 테스트 추가
+- Files:
+  - components/results/ResultsStep.tsx
+  - lib/rules/personas.ts
+  - tests/wizard.test.tsx
+  - tests/personaImage.test.ts
+  - CHANGELOG.md
+- Verification:
+  - `npm test` 통과
+  - `npm run build` 통과
