@@ -13,6 +13,7 @@ import {
   type SegmentInput,
 } from "@/lib/types/segment";
 import { segmentSchema, type SegmentFormInput } from "@/lib/validation/segmentSchema";
+import { ApproachSection } from "@/components/results/ApproachSection";
 import { ResultsStep } from "@/components/results/ResultsStep";
 import { ContextStep } from "@/components/steps/ContextStep";
 import { IndustryStep } from "@/components/steps/IndustryStep";
@@ -120,16 +121,22 @@ export function SegmentPersonaWizard() {
           <ResultsStep
             result={result}
             selectedSegment={analysisInput}
-            selectedApproachId={selectedApproachId}
-            selectedImpact={selectedImpact}
-            extraValues={extraValues}
             completionRatio={completionRatio}
-            onSelectApproach={setSelectedApproachId}
-            onExtraChange={(fieldId, value) => {
-              setExtraValues((prev) => ({ ...prev, [fieldId]: value }));
-            }}
           />
         </div>
+      </div>
+
+      <div className="mt-20">
+        <ApproachSection
+          result={result}
+          selectedApproachId={selectedApproachId}
+          selectedImpact={selectedImpact}
+          extraValues={extraValues}
+          onSelectApproach={setSelectedApproachId}
+          onExtraChange={(fieldId, value) => {
+            setExtraValues((prev) => ({ ...prev, [fieldId]: value }));
+          }}
+        />
       </div>
     </div>
   );

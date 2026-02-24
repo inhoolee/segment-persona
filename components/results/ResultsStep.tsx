@@ -1,51 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { getExtraFieldDefinitions } from "@/lib/rules/extraFields";
 import { AGE_LABELS, GENDER_LABELS, PAYMENT_LABELS, VISIT_LABELS } from "@/lib/rules/options";
-import type { AnalysisResult, ExpectedImpact, SegmentInput } from "@/lib/types/segment";
+import type { AnalysisResult, SegmentInput } from "@/lib/types/segment";
 import { CollapsiblePanel } from "@/components/common/CollapsiblePanel";
 
 interface ResultsStepProps {
   result: AnalysisResult;
   selectedSegment: SegmentInput;
-  selectedApproachId: string;
-  selectedImpact: ExpectedImpact | null;
-  extraValues: Record<string, string>;
   completionRatio: number;
-  onSelectApproach: (approachId: string) => void;
-  onExtraChange: (fieldId: string, value: string) => void;
 }
 
-function ImpactPanel({ impact }: { impact: ExpectedImpact }) {
-  return (
-    <div className="impact-panel">
-      <p>
-        전환율 개선: <strong>{impact.conversionLiftPctMin}% ~ {impact.conversionLiftPctMax}%</strong>
-      </p>
-      <p>
-        재방문율 개선: <strong>{impact.retentionLiftPctMin}% ~ {impact.retentionLiftPctMax}%</strong>
-      </p>
-      <p className="muted small">실측 데이터가 아닌 규칙 기반 추정치입니다.</p>
-    </div>
-  );
-}
-
-export function ResultsStep({
-  result,
-  selectedSegment,
-  selectedApproachId,
-  selectedImpact,
-  extraValues,
-  completionRatio,
-  onSelectApproach,
-  onExtraChange,
-}: ResultsStepProps) {
-  const selectedApproach =
-    result.approaches.find((approach) => approach.id === selectedApproachId) ?? result.approaches[0];
-
-  const selectedApproachImpact = selectedImpact ?? selectedApproach.expectedImpact;
-  const extraFieldDefs = getExtraFieldDefinitions(selectedApproach.requiredExtraFields);
+export function ResultsStep({ result, selectedSegment, completionRatio }: ResultsStepProps) {
   const keyTraits = result.persona.traits.slice(0, 3);
   const keyPainPoints = result.persona.painPoints.slice(0, 3);
   const completionPct = Math.round(completionRatio * 100);
@@ -101,75 +67,6 @@ export function ResultsStep({
           <p className="muted">핵심 특성: {keyTraits.join(" · ")}</p>
           <p className="muted">주요 과제: {keyPainPoints.join(" · ")}</p>
         </div>
-      </article>
-
-      <div className="mt-20">
-        <h3>추천 접근법</h3>
-        <div className="approach-grid mt-12">
-          {result.approaches.map((approach) => (
-            <button
-              key={approach.id}
-              type="button"
-              className={`approach-card ${selectedApproach.id === approach.id ? "active" : ""}`}
-              onClick={() => onSelectApproach(approach.id)}
-            >
-              <p className="priority">우선순위 점수 {approach.priority}</p>
-              <h4>{approach.title}</h4>
-              <p>{approach.reason}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <article className="detail-card mt-20">
-        <h3>실행 방법</h3>
-        <p className="muted small">{selectedApproach.title}</p>
-        <ol>
-          {selectedApproach.actionSteps.map((step) => (
-            <li key={step}>{step}</li>
-          ))}
-        </ol>
-      </article>
-
-      {extraFieldDefs.length > 0 ? (
-        <article className="detail-card mt-12">
-          <h3>추가 정보 입력</h3>
-          <div className="extra-fields mt-12">
-            {extraFieldDefs.map((field) => (
-              <label key={field.id} className="input-label mt-12">
-                {field.label}
-                {field.inputType === "select" ? (
-                  <select
-                    className="input-control"
-                    value={extraValues[field.id] ?? field.defaultValue ?? ""}
-                    onChange={(event) => onExtraChange(field.id, event.target.value)}
-                  >
-                    {(field.options ?? []).map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    className="input-control"
-                    type="number"
-                    min={field.min}
-                    max={field.max}
-                    value={extraValues[field.id] ?? field.defaultValue ?? ""}
-                    onChange={(event) => onExtraChange(field.id, event.target.value)}
-                  />
-                )}
-              </label>
-            ))}
-          </div>
-          <p className="muted small mt-12">미입력 시 샘플값으로 임팩트를 계산합니다.</p>
-        </article>
-      ) : null}
-
-      <article className="detail-card mt-12">
-        <h3>예상 임팩트</h3>
-        <ImpactPanel impact={selectedApproachImpact} />
       </article>
     </CollapsiblePanel>
   );

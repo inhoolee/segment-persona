@@ -371,6 +371,19 @@ p {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.approach-detail-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1.4fr 1fr;
+  align-items: start;
+}
+
+.approach-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .approach-card {
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -477,7 +490,8 @@ p {
   }
 
   .grid-two,
-  .approach-grid {
+  .approach-grid,
+  .approach-detail-grid {
     grid-template-columns: 1fr;
   }
 
