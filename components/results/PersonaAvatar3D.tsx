@@ -4,7 +4,7 @@ import { Component, Suspense, useMemo, useRef } from "react";
 import type { ReactNode } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
-import { Box3, Vector3 } from "three";
+import { Box3, Color, Vector3 } from "three";
 import type { Group, Mesh, MeshStandardMaterial, Object3D } from "three";
 import type { PersonaAvatar3DConfig } from "@/lib/types/segment";
 
@@ -57,14 +57,43 @@ function getCameraTarget(cameraPreset: PersonaAvatar3DConfig["cameraPreset"]): [
   return cameraPreset === "close" ? [0, 0.68, 0] : [0, 0.73, 0];
 }
 
-function getMaterialColor(materialPreset: PersonaAvatar3DConfig["materialPreset"]): string {
-  if (materialPreset === "high") return "#f2d282";
-  if (materialPreset === "mid") return "#9fb7d7";
-  return "#7f8a9a";
+function getOutfitBaseColor(outfitPreset: PersonaAvatar3DConfig["outfitPreset"]): string {
+  if (outfitPreset === "hoodie") return "#3f78db";
+  if (outfitPreset === "apron") return "#ca6c2d";
+  if (outfitPreset === "blazer") return "#2d8a67";
+  if (outfitPreset === "scrubs") return "#2f90b9";
+  if (outfitPreset === "cardigan") return "#8a5ec2";
+  if (outfitPreset === "windbreaker") return "#34a27f";
+  if (outfitPreset === "jersey") return "#ba4f99";
+  return "#6f7b8e";
 }
 
-function applyMaterialPreset(scene: Object3D, materialPreset: PersonaAvatar3DConfig["materialPreset"]): void {
-  const color = getMaterialColor(materialPreset);
+function getPaymentTone(materialPreset: PersonaAvatar3DConfig["materialPreset"]): {
+  satOffset: number;
+  lightOffset: number;
+  metalness: number;
+  roughness: number;
+} {
+  if (materialPreset === "high") {
+    return { satOffset: 0.1, lightOffset: 0.08, metalness: 0.36, roughness: 0.44 };
+  }
+  if (materialPreset === "mid") {
+    return { satOffset: 0, lightOffset: 0, metalness: 0.2, roughness: 0.62 };
+  }
+  return { satOffset: -0.12, lightOffset: -0.06, metalness: 0.1, roughness: 0.78 };
+}
+
+function applyMaterialPreset(
+  scene: Object3D,
+  materialPreset: PersonaAvatar3DConfig["materialPreset"],
+  outfitPreset: PersonaAvatar3DConfig["outfitPreset"],
+): void {
+  const baseColor = new Color(getOutfitBaseColor(outfitPreset));
+  const tone = getPaymentTone(materialPreset);
+
+  const shadedColor = baseColor.clone();
+  shadedColor.offsetHSL(0, tone.satOffset, tone.lightOffset);
+
   scene.traverse((child) => {
     const mesh = child as Mesh;
     if (!mesh.isMesh || !mesh.material) return;
@@ -73,7 +102,9 @@ function applyMaterialPreset(scene: Object3D, materialPreset: PersonaAvatar3DCon
     materials.forEach((material) => {
       const standardMaterial = material as MeshStandardMaterial;
       if (!("color" in standardMaterial)) return;
-      standardMaterial.color.set(color);
+      standardMaterial.color.copy(shadedColor);
+      if ("metalness" in standardMaterial) standardMaterial.metalness = tone.metalness;
+      if ("roughness" in standardMaterial) standardMaterial.roughness = tone.roughness;
       standardMaterial.needsUpdate = true;
     });
   });
@@ -85,7 +116,7 @@ function AvatarModel({ config }: { config: PersonaAvatar3DConfig }) {
 
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
-    applyMaterialPreset(clone, config.materialPreset);
+    applyMaterialPreset(clone, config.materialPreset, config.outfitPreset);
     clone.updateMatrixWorld(true);
 
     const box = new Box3().setFromObject(clone);
@@ -110,7 +141,7 @@ function AvatarModel({ config }: { config: PersonaAvatar3DConfig }) {
     }
 
     return clone;
-  }, [scene, config.materialPreset, config.cameraPreset]);
+  }, [scene, config.materialPreset, config.outfitPreset, config.cameraPreset]);
 
   useFrame(({ clock }) => {
     if (!groupRef.current) return;

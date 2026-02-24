@@ -433,3 +433,25 @@
 - Verification:
   - `npm run test` 통과
   - `npm run build` 통과
+
+## 2026-02-24 21:03
+- Request: 남자/여자 프리셋이 다른 옵션 변경 시 바뀌지 않는 것이 의도인지 확인
+- Changes:
+  - No code change
+- Files:
+  - CHANGELOG.md
+- Verification:
+  - Not run (질의 응답)
+
+## 2026-02-24 21:05
+- Request: 남/여 모델이 다른 옵션을 바꿔도 동일하게 보이는 문제를 수정해 도메인/결제 옵션 변화가 3D에 보이도록 반영
+- Changes:
+  - `PersonaAvatar3D`에서 기존 단일 톤 재질 처리 로직을 확장해 `outfitPreset`(도메인) 기반 기본 색상 팔레트를 적용
+  - `materialPreset`(결제 등급)에 따라 채도/명도/금속도/거칠기 톤을 조정하도록 변경해 옵션 변화가 시각적으로 드러나게 개선
+  - 3D 씬 복제 시 재질 적용 의존성에 `outfitPreset`을 포함해 도메인 변경 시 즉시 렌더 재계산되도록 수정
+- Files:
+  - components/results/PersonaAvatar3D.tsx
+  - CHANGELOG.md
+- Verification:
+  - `npm run test` 통과
+  - `npm run build` 통과
