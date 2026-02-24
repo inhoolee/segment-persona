@@ -203,5 +203,44 @@ describe("analyzeSegment", () => {
 
     expect(result.persona.id).toBe("grp_food_delivery_40s_other_loyal_high");
     expect(result.persona.imagePath.startsWith("data:image/svg+xml;utf8,")).toBe(true);
+    expect(result.persona.avatar3d).toMatchObject({
+      modelPath: "/avatars/placeholders/40s-other.glb",
+      animation: "loyal",
+      outfitPreset: "jacket",
+      materialPreset: "high",
+      cameraPreset: "medium",
+      autoRotate: true,
+    });
+  });
+
+  it("3D 아바타 설정은 핵심 세그먼트 5필드에 맞춰 매핑된다", () => {
+    const baseInput: SegmentInput = {
+      domain: "SaaS",
+      ageGroup: "20s",
+      gender: "female",
+      visitFrequency: "new",
+      paymentTier: "low",
+      goal: "conversion",
+      channelPreference: "email",
+      note: "",
+    };
+
+    const baseAvatar = analyzeSegment(baseInput).persona.avatar3d;
+    const fintechAvatar = analyzeSegment({ ...baseInput, domain: "Fintech" }).persona.avatar3d;
+    const loyalAvatar = analyzeSegment({ ...baseInput, visitFrequency: "loyal" }).persona.avatar3d;
+    const highTierAvatar = analyzeSegment({ ...baseInput, paymentTier: "high" }).persona.avatar3d;
+    const olderMaleAvatar = analyzeSegment({ ...baseInput, ageGroup: "40s", gender: "male" }).persona.avatar3d;
+
+    expect(baseAvatar).toBeDefined();
+    expect(fintechAvatar?.outfitPreset).toBe("blazer");
+    expect(baseAvatar?.outfitPreset).toBe("hoodie");
+    expect(baseAvatar?.animation).toBe("new");
+    expect(loyalAvatar?.animation).toBe("loyal");
+    expect(baseAvatar?.materialPreset).toBe("low");
+    expect(highTierAvatar?.materialPreset).toBe("high");
+    expect(baseAvatar?.modelPath).toBe("/avatars/placeholders/20s-female.glb");
+    expect(olderMaleAvatar?.modelPath).toBe("/avatars/placeholders/40s-male.glb");
+    expect(baseAvatar?.cameraPreset).toBe("close");
+    expect(olderMaleAvatar?.cameraPreset).toBe("medium");
   });
 });

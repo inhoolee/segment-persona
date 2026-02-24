@@ -284,6 +284,21 @@ p {
   object-fit: cover;
 }
 
+.persona-3d-layer {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
+  transition: filter 220ms ease, transform 220ms ease;
+}
+
+.persona-3d-layer canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit;
+}
+
 .persona-meta {
   width: 100%;
   min-width: 0;

@@ -27,6 +27,16 @@ export interface PersonaProfile {
   traits: string[];
   painPoints: string[];
   imagePath: string;
+  avatar3d?: PersonaAvatar3DConfig;
+}
+
+export interface PersonaAvatar3DConfig {
+  modelPath: string;
+  animation: VisitFrequency;
+  outfitPreset: string;
+  materialPreset: PaymentTier;
+  cameraPreset: "close" | "medium";
+  autoRotate: boolean;
 }
 
 export interface ExpectedImpact {

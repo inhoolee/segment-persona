@@ -1,4 +1,5 @@
 import type { AgeGroup, Gender, PersonaProfile, SegmentInput } from "@/lib/types/segment";
+import { buildPersonaAvatar3DConfig } from "@/lib/rules/avatar3d";
 
 type OutfitVariant =
   | "hoodie"
@@ -406,5 +407,6 @@ export function resolvePersona(input: SegmentInput): PersonaProfile {
       input.gender,
       input.visitFrequency,
     ),
+    avatar3d: buildPersonaAvatar3DConfig(input),
   };
 }

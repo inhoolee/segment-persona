@@ -16,6 +16,10 @@ test("단일 화면에서 입력 중 실시간 결과를 확인할 수 있다", 
   await page.selectOption("#visitFrequency", "loyal");
 
   await expect(page.getByText("SaaS 20대 여성 그룹")).toBeVisible();
+  const personaMedia = page.getByTestId("persona-media");
+  await expect(personaMedia).toBeVisible();
+  const renderMode = await personaMedia.getAttribute("data-render-mode");
+  expect(renderMode === "3d" || renderMode === "image").toBe(true);
   await expect(page.getByRole("heading", { name: "추천 접근법" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "예상 임팩트" })).toBeVisible();
 });

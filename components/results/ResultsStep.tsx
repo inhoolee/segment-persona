@@ -1,8 +1,13 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { getExtraFieldDefinitions } from "@/lib/rules/extraFields";
 import { AGE_LABELS, GENDER_LABELS, PAYMENT_LABELS, VISIT_LABELS } from "@/lib/rules/options";
 import type { AnalysisResult, ExpectedImpact, SegmentInput } from "@/lib/types/segment";
 import { CollapsiblePanel } from "@/components/common/CollapsiblePanel";
+import { shouldRender3DAvatar } from "@/lib/utils/avatarRenderPolicy";
+import { PersonaAvatar3D } from "@/components/results/PersonaAvatar3D";
 
 interface ResultsStepProps {
   result: AnalysisResult;
@@ -39,6 +44,17 @@ export function ResultsStep({
   onSelectApproach,
   onExtraChange,
 }: ResultsStepProps) {
+  const [allow3D, setAllow3D] = useState(false);
+  const [forceImageFallback, setForceImageFallback] = useState(false);
+
+  useEffect(() => {
+    setAllow3D(shouldRender3DAvatar());
+  }, []);
+
+  useEffect(() => {
+    setForceImageFallback(false);
+  }, [result.persona.id, result.persona.avatar3d?.modelPath]);
+
   const selectedApproach =
     result.approaches.find((approach) => approach.id === selectedApproachId) ?? result.approaches[0];
 
@@ -50,6 +66,7 @@ export function ResultsStep({
   const blurPx = Number(((1 - completionRatio) * 11).toFixed(1));
   const saturate = Number((0.65 + completionRatio * 0.6).toFixed(2));
   const scale = Number((1.04 - completionRatio * 0.04).toFixed(3));
+  const renderMode = allow3D && result.persona.avatar3d && !forceImageFallback ? "3d" : "image";
   const selectedTags = [
     { id: "domain", label: "도메인", value: selectedSegment.domain },
     { id: "ageGroup", label: "연령대", value: AGE_LABELS[selectedSegment.ageGroup] },
@@ -70,21 +87,31 @@ export function ResultsStep({
       </div>
 
       <article className="persona-card mt-20">
-        <div className="persona-image-wrap">
+        <div className="persona-image-wrap" data-testid="persona-media" data-render-mode={renderMode}>
           <span className="clarity-chip">구체화 {completionPct}%</span>
-          <Image
-            src={result.persona.imagePath}
-            alt={`${result.persona.name} 페르소나`}
-            fill
-            sizes="(max-width: 860px) 100vw, 640px"
-            priority
-            style={{
-              objectFit: "cover",
-              filter: `blur(${blurPx}px) saturate(${saturate})`,
-              transform: `scale(${scale})`,
-              transition: "filter 220ms ease, transform 220ms ease",
-            }}
-          />
+          {renderMode === "3d" && result.persona.avatar3d ? (
+            <PersonaAvatar3D
+              config={result.persona.avatar3d}
+              blurPx={blurPx}
+              saturate={saturate}
+              scale={scale}
+              onError={() => setForceImageFallback(true)}
+            />
+          ) : (
+            <Image
+              src={result.persona.imagePath}
+              alt={`${result.persona.name} 페르소나`}
+              fill
+              sizes="(max-width: 860px) 100vw, 640px"
+              priority
+              style={{
+                objectFit: "cover",
+                filter: `blur(${blurPx}px) saturate(${saturate})`,
+                transform: `scale(${scale})`,
+                transition: "filter 220ms ease, transform 220ms ease",
+              }}
+            />
+          )}
         </div>
         <div className="persona-meta">
           <h3>{result.persona.name}</h3>

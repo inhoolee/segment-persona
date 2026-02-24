@@ -343,3 +343,93 @@
   - CHANGELOG.md
 - Verification:
   - `npm test` 통과
+
+## 2026-02-24 20:49
+- Request: `data:image/svg+xml` 페르소나 이미지를 실시간 3D 아바타(`react-three-fiber`)로 전환하고, 성능 기준 자동 폴백(저사양/모션 축소/WebGL 미지원)을 적용
+- Changes:
+  - `three`, `@react-three/fiber`, `@react-three/drei` 의존성을 추가하고 3D 렌더 파이프라인을 도입
+  - `PersonaProfile`에 `avatar3d` 설정 타입을 확장하고, 세그먼트 핵심 5필드(도메인/연령/성별/방문/결제) 기반 3D 매핑 로직(`lib/rules/avatar3d.ts`)을 추가
+  - 기존 SVG 생성 경로는 유지하면서 `resolvePersona`가 3D 설정도 함께 반환하도록 확장
+  - 런타임 정책 유틸(`shouldRender3DAvatar`)을 추가해 reduced-motion, WebGL 지원 여부, `deviceMemory`/`hardwareConcurrency` 기준으로 3D 렌더 허용 여부를 결정
+  - 결과 패널에서 3D 뷰어/이미지 렌더를 분기하고, 모델 로드 실패 시 정적 이미지로 자동 폴백하도록 구현
+  - `Canvas + OrbitControls` 기반 `PersonaAvatar3D` 컴포넌트를 추가해 자동 회전 + 드래그 회전을 지원
+  - 플레이스홀더 GLB 자산 구조(`public/avatars/placeholders`)를 만들고 연령/성별 조합별 파일을 배치
+  - 단위/UI/E2E 테스트를 확장해 3D 매핑, 렌더 정책, 폴백 분기 검증을 추가
+- Files:
+  - package.json
+  - package-lock.json
+  - lib/types/segment.ts
+  - lib/rules/personas.ts
+  - lib/rules/avatar3d.ts
+  - lib/utils/avatarRenderPolicy.ts
+  - components/results/ResultsStep.tsx
+  - components/results/PersonaAvatar3D.tsx
+  - app/globals.css
+  - tests/analyzeSegment.test.ts
+  - tests/avatarRenderPolicy.test.ts
+  - tests/wizard.test.tsx
+  - e2e/persona-flow.spec.ts
+  - public/avatars/placeholders/base.glb
+  - public/avatars/placeholders/10s-female.glb
+  - public/avatars/placeholders/10s-male.glb
+  - public/avatars/placeholders/10s-other.glb
+  - public/avatars/placeholders/20s-female.glb
+  - public/avatars/placeholders/20s-male.glb
+  - public/avatars/placeholders/20s-other.glb
+  - public/avatars/placeholders/30s-female.glb
+  - public/avatars/placeholders/30s-male.glb
+  - public/avatars/placeholders/30s-other.glb
+  - public/avatars/placeholders/40s-female.glb
+  - public/avatars/placeholders/40s-male.glb
+  - public/avatars/placeholders/40s-other.glb
+  - public/avatars/placeholders/50plus-female.glb
+  - public/avatars/placeholders/50plus-male.glb
+  - public/avatars/placeholders/50plus-other.glb
+  - CHANGELOG.md
+- Verification:
+  - `npm run test` 통과
+  - `npm run test:e2e -- e2e/persona-flow.spec.ts` 통과
+  - `npm run build` 통과
+
+## 2026-02-24 20:52
+- Request: 이전 제안의 1번(플레이스홀더 GLB를 실제 휴먼형 3D 아바타 모델 세트로 교체) 진행
+- Changes:
+  - `public/avatars/placeholders`의 연령/성별 조합 GLB 15종과 `base.glb`를 휴먼형 모델로 교체
+  - 성별 기준 원본 소스 모델(`male/female/other`)을 `public/avatars/sources`에 추가해 추후 교체/확장 시 재사용 가능하도록 정리
+  - 기존 파일명/경로 체계는 유지해 매핑 로직 변경 없이 즉시 적용되도록 구성
+- Files:
+  - public/avatars/placeholders/10s-female.glb
+  - public/avatars/placeholders/10s-male.glb
+  - public/avatars/placeholders/10s-other.glb
+  - public/avatars/placeholders/20s-female.glb
+  - public/avatars/placeholders/20s-male.glb
+  - public/avatars/placeholders/20s-other.glb
+  - public/avatars/placeholders/30s-female.glb
+  - public/avatars/placeholders/30s-male.glb
+  - public/avatars/placeholders/30s-other.glb
+  - public/avatars/placeholders/40s-female.glb
+  - public/avatars/placeholders/40s-male.glb
+  - public/avatars/placeholders/40s-other.glb
+  - public/avatars/placeholders/50plus-female.glb
+  - public/avatars/placeholders/50plus-male.glb
+  - public/avatars/placeholders/50plus-other.glb
+  - public/avatars/placeholders/base.glb
+  - public/avatars/sources/female.glb
+  - public/avatars/sources/male.glb
+  - public/avatars/sources/other.glb
+  - CHANGELOG.md
+- Verification:
+  - `npm run test` 통과
+  - `npm run build` 통과
+
+## 2026-02-24 21:01
+- Request: 3D 아바타가 전신이 아닌 다리만 보이는 프레이밍 문제 수정
+- Changes:
+  - GLB 모델 로드시 바운딩 박스 기반으로 자동 정규화(center/scale) 로직을 추가해 모델 원점/크기 차이에 상관없이 전신이 프레임 중앙에 오도록 보정
+  - 카메라 위치와 OrbitControls 타깃을 인체 프레이밍 기준으로 재조정하고, 애니메이션 bobbing도 보정된 기준 위치(baseY)에서 동작하도록 수정
+- Files:
+  - components/results/PersonaAvatar3D.tsx
+  - CHANGELOG.md
+- Verification:
+  - `npm run test` 통과
+  - `npm run build` 통과
