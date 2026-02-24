@@ -49,7 +49,7 @@ export function ResultsStep({
   const completionPct = Math.round(completionRatio * 100);
   const blurPx = Number(((1 - completionRatio) * 11).toFixed(1));
   const saturate = Number((0.65 + completionRatio * 0.6).toFixed(2));
-  const scale = Number((0.96 + completionRatio * 0.04).toFixed(3));
+  const scale = Number((1.04 - completionRatio * 0.04).toFixed(3));
   const selectedTags = [
     { id: "domain", label: "도메인", value: selectedSegment.domain },
     { id: "ageGroup", label: "연령대", value: AGE_LABELS[selectedSegment.ageGroup] },
@@ -75,10 +75,11 @@ export function ResultsStep({
           <Image
             src={result.persona.imagePath}
             alt={`${result.persona.name} 페르소나`}
-            width={220}
-            height={220}
+            fill
+            sizes="(max-width: 860px) 100vw, 640px"
             priority
             style={{
+              objectFit: "cover",
               filter: `blur(${blurPx}px) saturate(${saturate})`,
               transform: `scale(${scale})`,
               transition: "filter 220ms ease, transform 220ms ease",
@@ -159,6 +160,7 @@ export function ResultsStep({
               </label>
             ))}
           </div>
+          <p className="muted small mt-12">미입력 시 샘플값으로 임팩트를 계산합니다.</p>
         </article>
       ) : null}
 

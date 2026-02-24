@@ -55,6 +55,12 @@ export const EXTRA_FIELD_DEFINITIONS: Record<string, ExtraFieldDefinition> = {
   },
 };
 
+export function getExtraFieldDefinitionById(fieldId: string): ExtraFieldDefinition | undefined {
+  return EXTRA_FIELD_DEFINITIONS[fieldId];
+}
+
 export function getExtraFieldDefinitions(fieldIds: string[]) {
-  return fieldIds.map((id) => EXTRA_FIELD_DEFINITIONS[id]).filter(Boolean);
+  return fieldIds
+    .map((id) => getExtraFieldDefinitionById(id))
+    .filter((field): field is ExtraFieldDefinition => Boolean(field));
 }

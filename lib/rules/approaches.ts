@@ -3,6 +3,7 @@ import type {
   ExpectedImpact,
   SegmentInput,
 } from "@/lib/types/segment";
+import { getExtraFieldDefinitionById } from "@/lib/rules/extraFields";
 
 const APPROACH_DEFINITIONS: Record<
   string,
@@ -154,6 +155,37 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
+function resolveExtraValue(
+  fieldId: string,
+  extras: Record<string, string>,
+  fallbackValue = "",
+): string {
+  const value = extras[fieldId];
+  if (typeof value !== "string") return fallbackValue;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : fallbackValue;
+}
+
+function resolveNumberExtraValue(
+  fieldId: string,
+  extras: Record<string, string>,
+  fallbackNumber: number,
+): number {
+  const fieldDefaultValue = getExtraFieldDefinitionById(fieldId)?.defaultValue;
+  const resolvedRawValue = resolveExtraValue(
+    fieldId,
+    extras,
+    fieldDefaultValue ?? String(fallbackNumber),
+  );
+  const parsed = Number(resolvedRawValue);
+  if (!Number.isNaN(parsed)) return parsed;
+
+  const parsedDefault = Number(fieldDefaultValue);
+  if (!Number.isNaN(parsedDefault)) return parsedDefault;
+
+  return fallbackNumber;
+}
+
 export function estimateImpact(
   approachId: string,
   input: SegmentInput,
@@ -170,18 +202,48 @@ export function estimateImpact(
   if (input.visitFrequency === "occasional") retentionDelta += 1.0;
 
   if (approachId === "reactivation_loop") {
-    const discount = Number(extras.discountRate ?? 10);
+    const discount = resolveNumberExtraValue("discountRate", extras, 10);
     conversionDelta += clamp(discount / 8, 0, 4);
   }
 
   if (approachId === "bundle_upsell") {
-    const depth = Number(extras.bundleDepth ?? 3);
+    const depth = resolveNumberExtraValue("bundleDepth", extras, 3);
     conversionDelta += clamp((depth - 2) * 0.9, 0, 2);
   }
 
   if (approachId === "quick_onboarding") {
-    const days = Number(extras.onboardingWindowDays ?? 7);
+    const days = resolveNumberExtraValue("onboardingWindowDays", extras, 7);
     retentionDelta += days >= 7 ? 0.8 : 0.2;
+  }
+
+  if (approachId === "high_value_retention") {
+    const defaultTouchpoint = getExtraFieldDefinitionById("vipTouchpoint")?.defaultValue ?? "biweekly";
+    const touchpoint = resolveExtraValue("vipTouchpoint", extras, defaultTouchpoint);
+    const deltaMap: Record<string, { conversion: number; retention: number }> = {
+      monthly: { conversion: 0.2, retention: 0.6 },
+      biweekly: { conversion: 0.5, retention: 1.2 },
+      weekly: { conversion: 0.8, retention: 2.0 },
+    };
+    const delta = deltaMap[touchpoint] ?? deltaMap[defaultTouchpoint];
+    if (delta) {
+      conversionDelta += delta.conversion;
+      retentionDelta += delta.retention;
+    }
+  }
+
+  if (approachId === "content_personalization") {
+    const defaultCadence = getExtraFieldDefinitionById("contentCadence")?.defaultValue ?? "weekly";
+    const cadence = resolveExtraValue("contentCadence", extras, defaultCadence);
+    const deltaMap: Record<string, { conversion: number; retention: number }> = {
+      monthly: { conversion: 0.2, retention: 0.4 },
+      biweekly: { conversion: 0.5, retention: 0.9 },
+      weekly: { conversion: 0.9, retention: 1.4 },
+    };
+    const delta = deltaMap[cadence] ?? deltaMap[defaultCadence];
+    if (delta) {
+      conversionDelta += delta.conversion;
+      retentionDelta += delta.retention;
+    }
   }
 
   const conversionMin = clamp(base.conversionLiftPctMin + conversionDelta, 1, 30);

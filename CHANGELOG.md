@@ -274,3 +274,72 @@
   - `npm test` 통과
   - `npm run lint` 통과
   - `npm run build` 통과
+
+## 2026-02-24 17:09
+- Request: 추가 정보 입력값에 따라 예상 임팩트가 즉시 갱신되도록 수정하고, 미입력 시 샘플 기본값으로 계산되게 개선
+- Changes:
+  - `estimateImpact`에 `resolveExtraValue`/`resolveNumberExtraValue`를 추가해 빈 값과 숫자 파싱 실패를 필드 `defaultValue`로 안전하게 대체
+  - `high_value_retention`(`vipTouchpoint`)과 `content_personalization`(`contentCadence`) 선택형 추가 입력도 임팩트 계산에 반영
+  - 추가 필드 조회 보조 함수 `getExtraFieldDefinitionById`를 추가하고 필드 조회 경로를 통일
+  - 결과 화면 `추가 정보 입력` 섹션에 미입력 시 샘플값 계산 안내 문구를 추가
+  - 단위/UI 테스트를 확장해 기본값 fallback과 추가 입력 변경 시 임팩트 갱신을 검증
+- Files:
+  - lib/rules/approaches.ts
+  - lib/rules/extraFields.ts
+  - components/results/ResultsStep.tsx
+  - tests/analyzeSegment.test.ts
+  - tests/wizard.test.tsx
+  - CHANGELOG.md
+- Verification:
+  - `npm run test` 통과
+  - `npm run lint` 통과
+
+## 2026-02-24 17:54
+- Request: 페르소나 이미지에서 테두리 미채움(빈 부분)과 라벨 텍스트 오버플로우 문제 수정
+- Changes:
+  - 페르소나 이미지 스케일 계산을 조정해 축소로 인한 내부 여백이 생기지 않도록 수정
+  - 이미지 래퍼에 정사각 비율/이미지 `object-fit: cover`를 적용해 프레임을 안정적으로 채우도록 보강
+  - 태그 라벨에 최대 폭/줄바꿈 규칙을 추가해 긴 텍스트가 라벨 밖으로 넘치지 않도록 수정
+- Files:
+  - components/results/ResultsStep.tsx
+  - app/globals.css
+  - CHANGELOG.md
+- Verification:
+  - `npm run test` 통과
+
+## 2026-02-24 18:01
+- Request: 페르소나 이미지가 여전히 래퍼를 가득 채우지 않는 문제 재수정
+- Changes:
+  - 페르소나 이미지를 `next/image`의 `fill` 모드로 전환하고 `object-fit: cover`를 명시해 래퍼를 항상 채우도록 수정
+  - 페르소나 카드 정렬을 `stretch`로 바꿔 이미지 래퍼가 카드 폭 전체를 사용하도록 조정
+  - 이미지 래퍼의 최대폭 제한(`max-width`)과 모바일 전용 폭 제한을 제거해 빈 영역이 생기지 않도록 변경
+- Files:
+  - components/results/ResultsStep.tsx
+  - app/globals.css
+  - CHANGELOG.md
+- Verification:
+  - `npm run test` 통과
+  - `npm run test:e2e -- e2e/persona-flow.spec.ts` 통과
+
+## 2026-02-24 18:04
+- Request: 이미지와 래퍼의 border radius 불일치로 코너에 빈 영역이 보이는 문제 수정
+- Changes:
+  - 페르소나 이미지 래퍼 반지름을 SVG 배경 라운드 비율(220 대비 28)과 동일한 `12.7273%`로 조정
+  - 이미지 요소에도 `border-radius: inherit`를 적용해 래퍼/이미지 코너 렌더링을 일치시킴
+- Files:
+  - app/globals.css
+  - CHANGELOG.md
+- Verification:
+  - `npm run test` 통과
+
+## 2026-02-24 18:07
+- Request: 트레블(트래블) 윈드브레이커 라벨 텍스트가 라벨 밖으로 벗어나는 문제 수정
+- Changes:
+  - 페르소나 SVG 의상 라벨의 고정 폭(78)을 제거하고, 텍스트 길이 추정 기반으로 라벨 폭을 동적으로 계산하도록 변경
+  - 한글/영문/숫자/공백 폭을 구분해 추정하는 `estimateSvgTextWidth` 헬퍼를 추가해 긴 의상 라벨이 라벨 내부에 유지되도록 보정
+  - 라벨 폭 상한을 두어 우측 상단 완성도 칩과의 잠재적 겹침 위험을 줄이면서도 `트래블 윈드브레이커` 텍스트를 모두 감싸도록 조정
+- Files:
+  - lib/rules/personas.ts
+  - CHANGELOG.md
+- Verification:
+  - `npm test` 통과

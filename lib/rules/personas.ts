@@ -245,6 +245,16 @@ function escapeXml(value: string): string {
     .replace(/>/g, "&gt;");
 }
 
+function estimateSvgTextWidth(value: string, fontSize: number): number {
+  return [...value].reduce((width, char) => {
+    if (/\s/u.test(char)) return width + fontSize * 0.32;
+    if (/[0-9A-Z]/u.test(char)) return width + fontSize * 0.64;
+    if (/[a-z]/u.test(char)) return width + fontSize * 0.56;
+    if (/[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF]/u.test(char)) return width + fontSize * 0.96;
+    return width + fontSize * 0.72;
+  }, 0);
+}
+
 function renderHair(hairShape: string, hairTone: string): string {
   if (hairShape === "female") {
     return [
@@ -331,6 +341,16 @@ function buildPersonaImage(
   const genderStyle = GENDER_STYLE[gender];
   const visit = VISIT_STYLE[visitFrequency];
   const safeLabel = escapeXml(groupId);
+  const labelX = 18;
+  const labelTextX = 40;
+  const labelFontSize = 9.5;
+  const labelWidth = Math.min(
+    136,
+    Math.max(
+      78,
+      Math.ceil(labelTextX - labelX + estimateSvgTextWidth(domainStyle.clothingLabel, labelFontSize) + 10),
+    ),
+  );
 
   const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-label="${safeLabel}">
@@ -348,9 +368,9 @@ function buildPersonaImage(
   ${visit.mouth}
   ${age.details}
   ${renderOutfit(domainStyle.outfitVariant, domainStyle.colors.clothing, domainStyle.colors.accent)}
-  <rect x="18" y="16" width="78" height="22" rx="11" fill="#FFFFFF" opacity="0.78" />
+  <rect x="${labelX}" y="16" width="${labelWidth}" height="22" rx="11" fill="#FFFFFF" opacity="0.78" />
   <circle cx="30" cy="27" r="4" fill="${domainStyle.colors.clothing}" />
-  <text x="40" y="31" font-size="9.5" fill="#22303F">${escapeXml(domainStyle.clothingLabel)}</text>
+  <text x="${labelTextX}" y="31" font-size="${labelFontSize}" fill="#22303F">${escapeXml(domainStyle.clothingLabel)}</text>
 </svg>
 `.trim();
 

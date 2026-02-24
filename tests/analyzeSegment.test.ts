@@ -77,6 +77,76 @@ describe("analyzeSegment", () => {
     expect(highDiscount.conversionLiftPctMax).toBeGreaterThan(lowDiscount.conversionLiftPctMax);
   });
 
+  it("추가 입력이 비어 있으면 필드 기본값(샘플값)으로 임팩트를 계산한다", () => {
+    const input: SegmentInput = {
+      domain: "Travel",
+      ageGroup: "40s",
+      gender: "other",
+      visitFrequency: "occasional",
+      paymentTier: "mid",
+      goal: "retention",
+      channelPreference: "push",
+      note: "",
+    };
+
+    const withEmptyExtras = recalculateApproachImpact("reactivation_loop", input, {});
+    const withDefaultExtras = recalculateApproachImpact("reactivation_loop", input, {
+      discountRate: "10",
+    });
+
+    expect(withEmptyExtras).toEqual(withDefaultExtras);
+  });
+
+  it("고가치 고객 유지 전략은 VIP 접점 빈도 선택값에 따라 임팩트가 달라진다", () => {
+    const input: SegmentInput = {
+      domain: "SaaS",
+      ageGroup: "30s",
+      gender: "female",
+      visitFrequency: "loyal",
+      paymentTier: "high",
+      goal: "retention",
+      channelPreference: "email",
+      note: "",
+    };
+
+    const monthly = recalculateApproachImpact("high_value_retention", input, {
+      vipTouchpoint: "monthly",
+    });
+    const weekly = recalculateApproachImpact("high_value_retention", input, {
+      vipTouchpoint: "weekly",
+    });
+
+    expect(weekly.conversionLiftPctMin).toBeGreaterThan(monthly.conversionLiftPctMin);
+    expect(weekly.conversionLiftPctMax).toBeGreaterThan(monthly.conversionLiftPctMax);
+    expect(weekly.retentionLiftPctMin).toBeGreaterThan(monthly.retentionLiftPctMin);
+    expect(weekly.retentionLiftPctMax).toBeGreaterThan(monthly.retentionLiftPctMax);
+  });
+
+  it("콘텐츠 개인화 전략은 발송 주기 선택값에 따라 임팩트가 달라진다", () => {
+    const input: SegmentInput = {
+      domain: "Education",
+      ageGroup: "20s",
+      gender: "female",
+      visitFrequency: "regular",
+      paymentTier: "mid",
+      goal: "conversion",
+      channelPreference: "inapp",
+      note: "",
+    };
+
+    const monthly = recalculateApproachImpact("content_personalization", input, {
+      contentCadence: "monthly",
+    });
+    const weekly = recalculateApproachImpact("content_personalization", input, {
+      contentCadence: "weekly",
+    });
+
+    expect(weekly.conversionLiftPctMin).toBeGreaterThan(monthly.conversionLiftPctMin);
+    expect(weekly.conversionLiftPctMax).toBeGreaterThan(monthly.conversionLiftPctMax);
+    expect(weekly.retentionLiftPctMin).toBeGreaterThan(monthly.retentionLiftPctMin);
+    expect(weekly.retentionLiftPctMax).toBeGreaterThan(monthly.retentionLiftPctMax);
+  });
+
   it("목표/채널이 바뀌어도 동일 도메인+세그먼트면 group_id가 유지된다", () => {
     const baseInput: SegmentInput = {
       domain: "SaaS",
