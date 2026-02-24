@@ -15,9 +15,9 @@ import {
 import { segmentSchema, type SegmentFormInput } from "@/lib/validation/segmentSchema";
 import { ApproachSection } from "@/components/results/ApproachSection";
 import { ResultsStep } from "@/components/results/ResultsStep";
-import { ContextStep } from "@/components/steps/ContextStep";
 import { IndustryStep } from "@/components/steps/IndustryStep";
 import { SegmentStep } from "@/components/steps/SegmentStep";
+import { ContextStep } from "@/components/steps/ContextStep";
 
 const REQUIRED_FIELDS: Array<keyof SegmentFormInput> = [
   "domain",
@@ -115,7 +115,6 @@ export function SegmentPersonaWizard() {
         <div className="input-column">
           <IndustryStep register={register} errors={errors} />
           <SegmentStep register={register} errors={errors} />
-          <ContextStep register={register} errors={errors} />
         </div>
         <div className="result-column">
           <ResultsStep
@@ -126,7 +125,8 @@ export function SegmentPersonaWizard() {
         </div>
       </div>
 
-      <div className="mt-20">
+      <div className="context-approach-layout mt-20">
+        <ContextStep register={register} errors={errors} />
         <ApproachSection
           result={result}
           selectedApproachId={selectedApproachId}
