@@ -1,19 +1,15 @@
 import { z } from "zod";
+import { DOMAIN_OPTIONS } from "@/lib/rules/options";
 import {
   AGE_GROUPS,
   CHANNEL_PREFERENCES,
   GENDERS,
-  INDUSTRY_TYPES,
   PAYMENT_TIERS,
   VISIT_FREQUENCIES,
 } from "@/lib/types/segment";
 
 export const segmentSchema = z.object({
-  industryType: z.enum(INDUSTRY_TYPES, { message: "산업 유형을 선택해주세요." }),
-  domain: z
-    .string()
-    .min(1, "도메인을 선택해주세요.")
-    .max(50, "도메인은 50자 이하로 입력해주세요."),
+  domain: z.enum(DOMAIN_OPTIONS, { message: "도메인을 선택해주세요." }),
   ageGroup: z.enum(AGE_GROUPS, { message: "연령대를 선택해주세요." }),
   gender: z.enum(GENDERS, { message: "성별을 선택해주세요." }),
   visitFrequency: z.enum(VISIT_FREQUENCIES, { message: "접속 주기를 선택해주세요." }),

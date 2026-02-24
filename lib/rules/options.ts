@@ -2,7 +2,6 @@ import type {
   AgeGroup,
   ChannelPreference,
   Gender,
-  IndustryType,
   PaymentTier,
   VisitFrequency,
 } from "@/lib/types/segment";
@@ -16,11 +15,6 @@ export const DOMAIN_OPTIONS = [
   "Travel",
   "Gaming",
 ] as const;
-
-export const INDUSTRY_LABELS: Record<IndustryType, string> = {
-  B2B: "B2B",
-  B2C: "B2C",
-};
 
 export const AGE_LABELS: Record<AgeGroup, string> = {
   "10s": "10대",

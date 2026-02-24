@@ -1,12 +1,37 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Churn risk cartoon persona">
   <defs>
-    <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#f08a5d"/>
-      <stop offset="100%" stop-color="#b83b5e"/>
+    <linearGradient id="bgChurn" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ecd8d8"/>
+      <stop offset="100%" stop-color="#c1afba"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" fill="url(#g4)"/>
-  <circle cx="256" cy="180" r="90" fill="#fff1f0"/>
-  <rect x="140" y="288" width="232" height="138" rx="44" fill="#fff1f0"/>
-  <text x="256" y="474" text-anchor="middle" fill="#4a1f30" font-size="27" font-family="Arial">Churn Risk</text>
+  <rect width="512" height="512" rx="28" fill="url(#bgChurn)"/>
+  <circle cx="100" cy="106" r="40" fill="#d9c6ce" opacity="0.6"/>
+  <circle cx="418" cy="92" r="35" fill="#d9c6ce" opacity="0.55"/>
+
+  <g transform="translate(0 8)">
+    <ellipse cx="256" cy="414" rx="144" ry="106" fill="#756675" stroke="#2d2a33" stroke-width="6"/>
+    <rect x="204" y="332" width="104" height="48" rx="16" fill="#645862"/>
+
+    <circle cx="256" cy="230" r="97" fill="#f3d4bf" stroke="#2d2a33" stroke-width="6"/>
+    <path d="M160 217c9-58 43-95 96-95 50 0 84 34 91 86-26-11-52-13-78-9-37 5-66 18-109 18z" fill="#302e33"/>
+
+    <ellipse cx="221" cy="233" rx="9" ry="11" fill="#2d2a33"/>
+    <ellipse cx="293" cy="233" rx="9" ry="11" fill="#2d2a33"/>
+    <path d="M228 279c18-7 38-8 56 0" fill="none" stroke="#2d2a33" stroke-width="6" stroke-linecap="round"/>
+    <path d="M205 255h18M289 255h18" stroke="#2d2a33" stroke-width="4" stroke-linecap="round" opacity="0.75"/>
+  </g>
+
+  <g transform="translate(60 304)">
+    <rect x="0" y="0" width="90" height="72" rx="12" fill="#f8f3f6" stroke="#2d2a33" stroke-width="5"/>
+    <path d="M22 24h46M22 40h46" stroke="#2d2a33" stroke-width="5" stroke-linecap="round"/>
+    <path d="M18 58l54-32" stroke="#c5676b" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(360 300)">
+    <circle cx="38" cy="38" r="32" fill="#f8f3f6" stroke="#2d2a33" stroke-width="5"/>
+    <rect x="24" y="22" width="8" height="22" rx="3" fill="#2d2a33"/>
+    <rect x="44" y="22" width="8" height="22" rx="3" fill="#2d2a33"/>
+    <path d="M18 58l40-40" stroke="#c5676b" stroke-width="6" stroke-linecap="round"/>
+  </g>
 </svg>

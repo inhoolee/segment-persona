@@ -1,6 +1,7 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { AGE_LABELS, GENDER_LABELS, PAYMENT_LABELS, VISIT_LABELS } from "@/lib/rules/options";
 import type { SegmentFormInput } from "@/lib/validation/segmentSchema";
+import { CollapsiblePanel } from "@/components/common/CollapsiblePanel";
 
 interface SegmentStepProps {
   register: UseFormRegister<SegmentFormInput>;
@@ -37,9 +38,10 @@ function SelectField({
 
 export function SegmentStep({ register, errors }: SegmentStepProps) {
   return (
-    <section className="panel">
-      <h2>2. 고객 세그먼트 입력</h2>
-      <p className="muted">핵심 세그먼트 항목을 선택하면 페르소나와 접근법 정확도가 올라갑니다.</p>
+    <CollapsiblePanel
+      title="2. 고객 세그먼트 입력"
+      description="핵심 세그먼트 항목을 선택하면 페르소나와 접근법 정확도가 올라갑니다."
+    >
 
       <div className="grid-two mt-20">
         <SelectField id="ageGroup" label="연령대" register={register} options={AGE_LABELS} />
@@ -57,6 +59,6 @@ export function SegmentStep({ register, errors }: SegmentStepProps) {
       {errors.gender ? <p className="error-text">{errors.gender.message}</p> : null}
       {errors.visitFrequency ? <p className="error-text">{errors.visitFrequency.message}</p> : null}
       {errors.paymentTier ? <p className="error-text">{errors.paymentTier.message}</p> : null}
-    </section>
+    </CollapsiblePanel>
   );
 }

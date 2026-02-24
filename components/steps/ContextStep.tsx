@@ -1,6 +1,7 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { CHANNEL_LABELS, GOAL_OPTIONS } from "@/lib/rules/options";
 import type { SegmentFormInput } from "@/lib/validation/segmentSchema";
+import { CollapsiblePanel } from "@/components/common/CollapsiblePanel";
 
 interface ContextStepProps {
   register: UseFormRegister<SegmentFormInput>;
@@ -9,9 +10,10 @@ interface ContextStepProps {
 
 export function ContextStep({ register, errors }: ContextStepProps) {
   return (
-    <section className="panel">
-      <h2>3. 분석 목표와 채널 컨텍스트</h2>
-      <p className="muted">접근법 추천에 필요한 목표와 선호 채널 정보를 입력합니다.</p>
+    <CollapsiblePanel
+      title="3. 분석 목표와 채널 컨텍스트"
+      description="접근법 추천에 필요한 목표와 선호 채널 정보를 입력합니다."
+    >
 
       <div className="mt-20">
         <label htmlFor="goal" className="input-label">
@@ -54,6 +56,6 @@ export function ContextStep({ register, errors }: ContextStepProps) {
         />
       </div>
       {errors.note ? <p className="error-text">{errors.note.message}</p> : null}
-    </section>
+    </CollapsiblePanel>
   );
 }

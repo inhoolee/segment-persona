@@ -123,12 +123,6 @@ const RULES: Rule[] = [
     when: (input) => input.paymentTier === "high",
   },
   {
-    approachId: "high_value_retention",
-    weight: 3,
-    reason: "B2B 환경에서는 장기 관계 관리가 중요합니다.",
-    when: (input) => input.industryType === "B2B",
-  },
-  {
     approachId: "reactivation_loop",
     weight: 9,
     reason: "접속 간격이 늘어난 고객은 재활성화 루프가 필요합니다.",
@@ -174,7 +168,6 @@ export function estimateImpact(
   if (input.paymentTier === "high") retentionDelta += 1.5;
   if (input.visitFrequency === "new") conversionDelta += 1.2;
   if (input.visitFrequency === "occasional") retentionDelta += 1.0;
-  if (input.industryType === "B2B") conversionDelta += 0.8;
 
   if (approachId === "reactivation_loop") {
     const discount = Number(extras.discountRate ?? 10);

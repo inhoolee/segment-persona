@@ -1,9 +1,12 @@
 import Image from "next/image";
 import { getExtraFieldDefinitions } from "@/lib/rules/extraFields";
-import type { AnalysisResult, ExpectedImpact } from "@/lib/types/segment";
+import { AGE_LABELS, GENDER_LABELS, PAYMENT_LABELS, VISIT_LABELS } from "@/lib/rules/options";
+import type { AnalysisResult, ExpectedImpact, SegmentInput } from "@/lib/types/segment";
+import { CollapsiblePanel } from "@/components/common/CollapsiblePanel";
 
 interface ResultsStepProps {
   result: AnalysisResult;
+  selectedSegment: SegmentInput;
   selectedApproachId: string;
   selectedImpact: ExpectedImpact | null;
   extraValues: Record<string, string>;
@@ -15,7 +18,6 @@ interface ResultsStepProps {
 function ImpactPanel({ impact }: { impact: ExpectedImpact }) {
   return (
     <div className="impact-panel">
-      <h4>예상 임팩트</h4>
       <p>
         전환율 개선: <strong>{impact.conversionLiftPctMin}% ~ {impact.conversionLiftPctMax}%</strong>
       </p>
@@ -29,6 +31,7 @@ function ImpactPanel({ impact }: { impact: ExpectedImpact }) {
 
 export function ResultsStep({
   result,
+  selectedSegment,
   selectedApproachId,
   selectedImpact,
   extraValues,
@@ -41,15 +44,26 @@ export function ResultsStep({
 
   const selectedApproachImpact = selectedImpact ?? selectedApproach.expectedImpact;
   const extraFieldDefs = getExtraFieldDefinitions(selectedApproach.requiredExtraFields);
+  const keyTraits = result.persona.traits.slice(0, 3);
+  const keyPainPoints = result.persona.painPoints.slice(0, 3);
   const completionPct = Math.round(completionRatio * 100);
   const blurPx = Number(((1 - completionRatio) * 11).toFixed(1));
   const saturate = Number((0.65 + completionRatio * 0.6).toFixed(2));
   const scale = Number((0.96 + completionRatio * 0.04).toFixed(3));
+  const selectedTags = [
+    { id: "domain", label: "도메인", value: selectedSegment.domain },
+    { id: "ageGroup", label: "연령대", value: AGE_LABELS[selectedSegment.ageGroup] },
+    { id: "gender", label: "성별", value: GENDER_LABELS[selectedSegment.gender] },
+    { id: "visitFrequency", label: "방문", value: VISIT_LABELS[selectedSegment.visitFrequency] },
+    { id: "paymentTier", label: "결제", value: PAYMENT_LABELS[selectedSegment.paymentTier] },
+  ];
 
   return (
-    <section className="panel results-panel sticky-panel">
-      <h2>실시간 페르소나 결과</h2>
-      <p className="muted">고객 정보가 채워질수록 페르소나 이미지와 전략이 선명해집니다.</p>
+    <CollapsiblePanel
+      title="실시간 페르소나 결과"
+      description="고객 정보가 채워질수록 페르소나 이미지와 전략이 선명해집니다."
+      className="results-panel sticky-panel"
+    >
       <p className="muted">입력 완성도 {completionPct}%</p>
       <div className="completion-meter mt-12" aria-label={`입력 완성도 ${completionPct}%`}>
         <span style={{ width: `${completionPct}%` }} />
@@ -71,10 +85,17 @@ export function ResultsStep({
             }}
           />
         </div>
-        <div>
+        <div className="persona-meta">
           <h3>{result.persona.name}</h3>
-          <p className="muted">핵심 특성: {result.persona.traits.join(" · ")}</p>
-          <p className="muted">주요 과제: {result.persona.painPoints.join(" · ")}</p>
+          <div className="persona-tag-list mt-12" aria-label="선택 세그먼트 태그">
+            {selectedTags.map((tag) => (
+              <span key={tag.id} className="persona-tag">
+                {tag.label} · {tag.value}
+              </span>
+            ))}
+          </div>
+          <p className="muted">핵심 특성: {keyTraits.join(" · ")}</p>
+          <p className="muted">주요 과제: {keyPainPoints.join(" · ")}</p>
         </div>
       </article>
 
@@ -97,16 +118,19 @@ export function ResultsStep({
       </div>
 
       <article className="detail-card mt-20">
-        <h3>{selectedApproach.title}</h3>
+        <h3>실행 방법</h3>
+        <p className="muted small">{selectedApproach.title}</p>
         <ol>
           {selectedApproach.actionSteps.map((step) => (
             <li key={step}>{step}</li>
           ))}
         </ol>
+      </article>
 
-        {extraFieldDefs.length > 0 ? (
-          <div className="extra-fields">
-            <h4>추가 정보 입력</h4>
+      {extraFieldDefs.length > 0 ? (
+        <article className="detail-card mt-12">
+          <h3>추가 정보 입력</h3>
+          <div className="extra-fields mt-12">
             {extraFieldDefs.map((field) => (
               <label key={field.id} className="input-label mt-12">
                 {field.label}
@@ -135,10 +159,13 @@ export function ResultsStep({
               </label>
             ))}
           </div>
-        ) : null}
+        </article>
+      ) : null}
 
+      <article className="detail-card mt-12">
+        <h3>예상 임팩트</h3>
         <ImpactPanel impact={selectedApproachImpact} />
       </article>
-    </section>
+    </CollapsiblePanel>
   );
 }

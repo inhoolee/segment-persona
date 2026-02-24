@@ -1,12 +1,38 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Budget starter cartoon persona">
   <defs>
-    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#f3b457"/>
-      <stop offset="100%" stop-color="#f06d43"/>
+    <linearGradient id="bgBudget" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffe1b5"/>
+      <stop offset="100%" stop-color="#ffb171"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" fill="url(#g1)"/>
-  <circle cx="256" cy="192" r="88" fill="#fff6e4"/>
-  <rect x="148" y="300" width="220" height="126" rx="46" fill="#fff6e4"/>
-  <text x="256" y="476" text-anchor="middle" fill="#3a2a10" font-size="28" font-family="Arial">Budget Starter</text>
+  <rect width="512" height="512" rx="28" fill="url(#bgBudget)"/>
+  <circle cx="96" cy="110" r="42" fill="#ffd07b" opacity="0.55"/>
+  <circle cx="425" cy="90" r="34" fill="#ffc469" opacity="0.45"/>
+
+  <g transform="translate(0 8)">
+    <ellipse cx="256" cy="412" rx="142" ry="104" fill="#2f8f9f" stroke="#2a2d34" stroke-width="6"/>
+    <path d="M200 331l56 35 56-35v42h-112z" fill="#235f6d"/>
+
+    <circle cx="256" cy="230" r="97" fill="#ffd7bd" stroke="#2a2d34" stroke-width="6"/>
+    <path d="M170 218c10-58 44-94 93-94 46 0 80 28 90 78-30-17-60-16-97-5-33 10-60 15-86 21z" fill="#3f342f"/>
+
+    <ellipse cx="220" cy="230" rx="10" ry="12" fill="#2a2d34"/>
+    <ellipse cx="292" cy="230" rx="10" ry="12" fill="#2a2d34"/>
+    <path d="M222 274c21 22 46 23 68 0" fill="none" stroke="#2a2d34" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="205" cy="256" r="10" fill="#f2a6a6" opacity="0.55"/>
+    <circle cx="307" cy="256" r="10" fill="#f2a6a6" opacity="0.55"/>
+  </g>
+
+  <g transform="translate(70 286)">
+    <rect x="0" y="0" width="72" height="82" rx="12" fill="#fff8eb" stroke="#2a2d34" stroke-width="5"/>
+    <circle cx="36" cy="24" r="7" fill="#ffb171"/>
+    <path d="M20 45h32M20 58h24" stroke="#2a2d34" stroke-width="5" stroke-linecap="round"/>
+    <path d="M72 22l18 12-18 12z" fill="#ffd07b" stroke="#2a2d34" stroke-width="5"/>
+  </g>
+
+  <g transform="translate(360 300)">
+    <circle cx="42" cy="42" r="38" fill="#fff8eb" stroke="#2a2d34" stroke-width="5"/>
+    <circle cx="42" cy="42" r="20" fill="#ffd07b" stroke="#2a2d34" stroke-width="5"/>
+    <path d="M34 42h16" stroke="#2a2d34" stroke-width="5" stroke-linecap="round"/>
+  </g>
 </svg>

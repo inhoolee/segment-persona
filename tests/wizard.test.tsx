@@ -9,7 +9,7 @@ describe("SegmentPersonaWizard", () => {
     render(<SegmentPersonaWizard />);
 
     expect(screen.queryByRole("button", { name: "다음" })).not.toBeInTheDocument();
-    expect(screen.getByText("1. 산업과 도메인 선택")).toBeInTheDocument();
+    expect(screen.getByText("1. 도메인 선택")).toBeInTheDocument();
     expect(screen.getByText("2. 고객 세그먼트 입력")).toBeInTheDocument();
     expect(screen.getByText("3. 분석 목표와 채널 컨텍스트")).toBeInTheDocument();
     expect(screen.getByText("실시간 페르소나 결과")).toBeInTheDocument();
@@ -24,6 +24,6 @@ describe("SegmentPersonaWizard", () => {
     await user.selectOptions(screen.getByLabelText("결제 금액"), "high");
     await user.selectOptions(screen.getByLabelText("접속 주기"), "loyal");
 
-    expect(screen.getByText("고가치 충성 사용자")).toBeInTheDocument();
+    expect(screen.getByText("SaaS 20대 여성 그룹")).toBeInTheDocument();
   });
 });

@@ -1,11 +1,9 @@
-export const INDUSTRY_TYPES = ["B2B", "B2C"] as const;
 export const AGE_GROUPS = ["10s", "20s", "30s", "40s", "50plus"] as const;
 export const GENDERS = ["male", "female", "other"] as const;
 export const VISIT_FREQUENCIES = ["new", "occasional", "regular", "loyal"] as const;
 export const PAYMENT_TIERS = ["low", "mid", "high"] as const;
 export const CHANNEL_PREFERENCES = ["email", "sms", "push", "inapp"] as const;
 
-export type IndustryType = (typeof INDUSTRY_TYPES)[number];
 export type AgeGroup = (typeof AGE_GROUPS)[number];
 export type Gender = (typeof GENDERS)[number];
 export type VisitFrequency = (typeof VISIT_FREQUENCIES)[number];
@@ -13,7 +11,6 @@ export type PaymentTier = (typeof PAYMENT_TIERS)[number];
 export type ChannelPreference = (typeof CHANNEL_PREFERENCES)[number];
 
 export interface SegmentInput {
-  industryType: IndustryType;
   domain: string;
   ageGroup: AgeGroup;
   gender: Gender;

@@ -21,7 +21,6 @@ const REQUIRED_FIELDS: Array<keyof SegmentFormInput> = [
 
 function toAnalysisInput(input: Partial<SegmentFormInput>): SegmentInput {
   return {
-    industryType: input.industryType ?? "B2C",
     domain: input.domain?.trim() ? input.domain : "SaaS",
     ageGroup: input.ageGroup ?? "20s",
     gender: input.gender ?? "female",
@@ -45,8 +44,7 @@ export function SegmentPersonaWizard() {
     resolver: zodResolver(segmentSchema),
     mode: "onTouched",
     defaultValues: {
-      industryType: "B2C",
-      domain: "",
+      domain: undefined,
       ageGroup: "20s",
       gender: "female",
       visitFrequency: "new",
@@ -105,6 +103,7 @@ export function SegmentPersonaWizard() {
         <div className="result-column">
           <ResultsStep
             result={result}
+            selectedSegment={analysisInput}
             selectedApproachId={selectedApproachId}
             selectedImpact={selectedImpact}
             extraValues={extraValues}

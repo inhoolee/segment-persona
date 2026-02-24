@@ -122,6 +122,50 @@ p {
   font-size: 1.3rem;
 }
 
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.collapse-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #dacbb0;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #5c4b3a;
+  background: #fff8ea;
+  cursor: pointer;
+}
+
+.collapse-toggle:hover {
+  border-color: #c87e2e;
+}
+
+.collapse-toggle:focus-visible {
+  outline: 2px solid #f4be73;
+  outline-offset: 1px;
+}
+
+.collapse-icon {
+  display: inline-block;
+  transform: rotate(-90deg);
+  transition: transform 160ms ease;
+}
+
+.collapse-icon.open {
+  transform: rotate(0deg);
+}
+
+.collapsible-content {
+  margin-top: 4px;
+}
+
 .live-layout {
   display: grid;
   gap: 16px;
@@ -212,9 +256,10 @@ p {
 }
 
 .persona-card {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
-  grid-template-columns: 220px minmax(0, 1fr);
+  align-items: start;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: linear-gradient(160deg, #fffdf8, #fff6e8);
@@ -228,6 +273,34 @@ p {
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid #f0dfc0;
+}
+
+.persona-meta {
+  width: 100%;
+  min-width: 0;
+}
+
+.persona-meta .muted {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.persona-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.persona-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid #dcc8a5;
+  background: #fffaf1;
+  color: #654d2a;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .clarity-chip {
@@ -305,13 +378,12 @@ p {
 }
 
 .extra-fields {
-  margin-top: 16px;
-  border-top: 1px dashed #e1cfb1;
-  padding-top: 12px;
+  display: grid;
+  gap: 0;
 }
 
 .impact-panel {
-  margin-top: 16px;
+  margin-top: 12px;
   border-radius: 12px;
   border: 1px solid #e6d5ba;
   background: #fff2d5;
@@ -372,10 +444,6 @@ p {
 
   .grid-two,
   .approach-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .persona-card {
     grid-template-columns: 1fr;
   }
 
